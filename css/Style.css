@@ -1,0 +1,495 @@
+/* ==========================================================================
+   ARG — style.css
+   Palette volontairement restreinte : noir profond, blanc cassé,
+   un seul accent doré très discret (utilisé comme "lumière" au loin).
+   Aucune police externe n'est chargée : uniquement des polices système,
+   pour ne faire aucune requête vers un serveur tiers.
+   ========================================================================== */
+
+:root {
+  --bg: #0a0a0b;
+  --bg-soft: #121113;
+  --line: rgba(236, 231, 225, 0.1);
+  --text: #ece7e1;
+  --text-dim: #8b8680;
+  --accent: #ad8b58;
+  --accent-dim: rgba(173, 139, 88, 0.35);
+
+  --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, "Times New Roman", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------- reset ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Respect reduced motion everywhere */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- shared scaffolding ---------- */
+
+.stage {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8vh 6vw;
+}
+
+/* One orchestrated ambient element: a slow, breathing glow far in the
+   background. This is the single piece of non-user-triggered motion
+   on each page. */
+.glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    ellipse 60% 45% at 50% 38%,
+    var(--accent-dim) 0%,
+    rgba(173, 139, 88, 0.06) 32%,
+    transparent 65%
+  );
+  opacity: 0.55;
+  animation: breathe 12s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.06); }
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 640px;
+  text-align: center;
+}
+
+/* Generic fade-up used only for the single page-load reveal on each page,
+   not scattered across every element. */
+.reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: reveal 1.4s var(--ease) forwards;
+}
+
+@keyframes reveal {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.delay-1 { animation-delay: 0.3s; }
+.delay-2 { animation-delay: 0.9s; }
+.delay-3 { animation-delay: 1.5s; }
+
+/* ---------- accessibility helpers ---------- */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 4px;
+}
+
+/* ==========================================================================
+   Page d'accueil — index.html
+   ========================================================================== */
+
+.intro-text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+  color: var(--text-dim);
+  line-height: 1.9;
+  margin: 0 0 4.5rem;
+  letter-spacing: 0.01em;
+}
+
+.enter-button {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: 1rem;
+  letter-spacing: 0.14em;
+  padding: 1.1rem 3rem;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: border-color 0.5s var(--ease), color 0.5s var(--ease), background 0.5s var(--ease);
+  min-height: 48px;
+}
+
+.enter-button:hover,
+.enter-button:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(173, 139, 88, 0.06);
+}
+
+/* Transition overlay used when leaving a page toward the next step */
+.veil {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s var(--ease);
+}
+
+.veil.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ==========================================================================
+   Bouton son — commun à toutes les pages
+   ========================================================================== */
+
+.sound-toggle {
+  position: fixed;
+  right: 1.4rem;
+  bottom: 1.4rem;
+  z-index: 40;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(18, 17, 19, 0.7);
+  backdrop-filter: blur(6px);
+  color: var(--text-dim);
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.4s var(--ease), border-color 0.4s var(--ease), transform 0.3s var(--ease);
+}
+
+.sound-toggle:hover,
+.sound-toggle:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent-dim);
+}
+
+.sound-toggle[data-state="muted"] {
+  color: var(--text-dim);
+  opacity: 0.6;
+}
+
+.sound-toggle.pulse {
+  animation: pulse-once 0.4s var(--ease);
+}
+
+@keyframes pulse-once {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.88); }
+  100% { transform: scale(1); }
+}
+
+/* Small prompt shown only if autoplay was blocked by the browser and the
+   music could not resume automatically on a later page. */
+.resume-audio {
+  position: fixed;
+  right: 1.4rem;
+  bottom: 4.6rem;
+  z-index: 40;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  background: rgba(18, 17, 19, 0.8);
+  border: 1px solid var(--line);
+  padding: 0.5rem 0.8rem;
+  border-radius: 4px;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
+}
+
+.resume-audio.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+/* ==========================================================================
+   Page quiz — quiz.html
+   ========================================================================== */
+
+.quiz-question {
+  font-family: var(--serif);
+  font-size: clamp(1.15rem, 2.6vw, 1.5rem);
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+}
+
+.quiz-answers {
+  list-style: none;
+  margin: 0 0 2rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.quiz-answer {
+  width: 100%;
+  text-align: left;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  color: var(--text);
+  padding: 0.9rem 1.2rem;
+  font-size: 0.98rem;
+  border-radius: 3px;
+  cursor: pointer;
+  min-height: 48px;
+  transition: border-color 0.35s var(--ease), background 0.35s var(--ease);
+}
+
+.quiz-answer:hover,
+.quiz-answer:focus-visible {
+  border-color: var(--accent-dim);
+  background: #17151a;
+}
+
+.quiz-answer[data-selected="true"] {
+  border-color: var(--accent);
+}
+
+.quiz-answer:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.quiz-message {
+  min-height: 1.6em;
+  color: var(--text-dim);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.quiz-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.ghost-button {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  padding: 0.75rem 1.8rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  border-radius: 2px;
+  cursor: pointer;
+  min-height: 44px;
+  transition: color 0.35s var(--ease), border-color 0.35s var(--ease);
+}
+
+.ghost-button:hover,
+.ghost-button:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent-dim);
+}
+
+.progress-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.progress-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--line);
+  transition: background 0.4s var(--ease);
+}
+
+.progress-dots span[data-done="true"] {
+  background: var(--accent);
+}
+
+/* code entry */
+
+.code-panel {
+  margin-top: 1rem;
+}
+
+.code-input {
+  width: 100%;
+  max-width: 280px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  letter-spacing: 0.2em;
+  text-align: center;
+  padding: 0.6rem 0.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.code-input:focus-visible {
+  outline: none;
+  border-bottom-color: var(--accent);
+}
+
+.hidden-step {
+  display: none;
+}
+
+/* ==========================================================================
+   Page poème — poem.html
+   ========================================================================== */
+
+.poem-stage .content {
+  max-width: 560px;
+}
+
+.poem {
+  font-family: var(--serif);
+  font-size: clamp(1.05rem, 2.6vw, 1.3rem);
+  line-height: 2.3;
+  color: var(--text);
+  white-space: pre-line;
+  letter-spacing: 0.01em;
+}
+
+.poem-hint-area {
+  margin-top: 4rem;
+  min-height: 1.4em;
+}
+
+.poem-clue-trigger {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: text;
+  padding: 0;
+}
+
+.poem-unlock {
+  margin-top: 3rem;
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--accent);
+  font-size: 0.95rem;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 1s var(--ease), transform 1s var(--ease);
+}
+
+.poem-unlock.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.poem-unlock a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent-dim);
+}
+
+/* ==========================================================================
+   Page finale — final.html
+   ========================================================================== */
+
+.final-stage .content {
+  max-width: 580px;
+}
+
+.final-text {
+  font-family: var(--serif);
+  font-size: clamp(1.05rem, 2.4vw, 1.3rem);
+  line-height: 2.1;
+  white-space: pre-line;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 480px) {
+  .stage {
+    padding: 7vh 6vw;
+  }
+
+  .enter-button {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .quiz-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ghost-button {
+    width: 100%;
+    max-width: 220px;
+  }
+}
