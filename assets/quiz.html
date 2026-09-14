@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <title>·</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+
+  <div class="glow" aria-hidden="true"></div>
+
+  <main class="stage">
+    <div class="content">
+
+      <div id="quiz-panel">
+        <div id="progress-dots" class="progress-dots reveal" aria-hidden="true"></div>
+
+        <h1 id="quiz-question" class="quiz-question reveal delay-1"></h1>
+
+        <ul id="quiz-answers" class="quiz-answers reveal delay-2" role="list"></ul>
+
+        <p id="quiz-message" class="quiz-message" role="status" aria-live="polite"></p>
+
+        <div id="quiz-actions" class="quiz-actions"></div>
+      </div>
+
+      <div id="code-panel" class="hidden-step">
+        <p class="quiz-question reveal">[ Entrer le code ]</p>
+
+        <div class="code-panel">
+          <label for="code-input" class="visually-hidden">Code</label>
+          <input
+            id="code-input"
+            class="code-input"
+            type="text"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            aria-describedby="code-message"
+          />
+          <p id="code-message" class="quiz-message" role="status" aria-live="polite"></p>
+          <div class="quiz-actions">
+            <button id="code-submit" class="ghost-button" type="button">VALIDER</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <audio id="bg-music" preload="auto" loop>
+    <source src="./assets/music/home.mp3" type="audio/mpeg" />
+  </audio>
+
+  <button id="sound-toggle" class="sound-toggle" type="button" data-state="unmuted" aria-label="Couper le son">🔊</button>
+  <div id="resume-audio" class="resume-audio" role="status">Cliquer pour réactiver le son</div>
+
+  <script src="./js/navigation.js"></script>
+  <script src="./js/quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <title>·</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+
+  <div class="glow" aria-hidden="true"></div>
+
+  <main class="stage poem-stage">
+    <div class="content">
+
+      <div class="poem reveal delay-1" id="poem-text">From the calmest night
+To the busiest day
+The heArt is a strange organ
+To pump blood and feel fright
+Or to be left in the graY
+Just lIke the lone orphan
+Playing kidding
+
+I can’t tell what im doing
+Maybe my heart aches
+Will finally cease
+As for my final act
+It’s a strange pact
+Letting it go ô please
+My feelings were never fakes
+But it’s tiMe to let it going
+
+Away from you
+A bit of peace for you</div>
+
+      <div class="poem-hint-area reveal delay-3">
+        <label for="poem-clue-input" class="visually-hidden">
+          Ce que tu as trouvé
+        </label>
+        <input
+          id="poem-clue-input"
+          class="code-input"
+          type="text"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+          placeholder="…"
+        />
+        <p id="poem-unlock-msg" class="poem-unlock"></p>
+      </div>
+
+    </div>
+  </main>
+
+  <audio id="bg-music" preload="auto" loop>
+    <source src="./assets/music/home.mp3" type="audio/mpeg" />
+  </audio>
+
+  <button id="sound-toggle" class="sound-toggle" type="button" data-state="unmuted" aria-label="Couper le son">🔊</button>
+  <div id="resume-audio" class="resume-audio" role="status">Cliquer pour réactiver le son</div>
+
+  <script src="./js/navigation.js"></script>
+  <script>
+  
+    const CLUE_CONFIG = {
+      answer: "Ayim",
+      unlockedMessage: "At least you pay attention.",
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      if (
+        !ARG.progress.require(ARG.progress.STEPS.QUIZ_DONE, "quiz.html") ||
+        !ARG.progress.require(ARG.progress.STEPS.CODE_DONE, "quiz.html")
+      ) {
+        return;
+      }
+
+      ARG.audio.init("bg-music");
+
+      const input = document.getElementById("poem-clue-input");
+      const msg = document.getElementById("poem-unlock-msg");
+      let unlocked = false;
+
+      function checkClue() {
+        if (unlocked) return;
+        const value = input.value.trim().toLowerCase();
+        const expected = CLUE_CONFIG.answer.trim().toLowerCase();
+        if (value.length === 0 || value !== expected) return;
+
+        unlocked = true;
+        ARG.progress.unlock(ARG.progress.STEPS.POEM_UNLOCKED);
+
+        input.setAttribute("disabled", "true");
+        msg.innerHTML =
+          CLUE_CONFIG.unlockedMessage +
+          ' — <a href="final.html" id="final-link">continuer</a>';
+        msg.classList.add("visible");
+
+        const link = document.getElementById("final-link");
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          ARG.transition.go("final.html");
+        });
+      }
+
+      input.addEventListener("input", checkClue);
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") checkClue();
+      });
+    });
+  </script>
+</body>
+</html>

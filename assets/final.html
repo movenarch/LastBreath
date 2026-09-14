@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <title>·</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+
+  <div class="glow" aria-hidden="true"></div>
+
+  <main class="stage final-stage">
+    <div class="content">
+      <div class="final-text reveal delay-1" id="final-text"> I know i’ve ended things abruptly and maybe you were hurt or maybe not. I wanted to apologise for my childish actions i don’t know what got Into me just know that I am sorry for every wrongdoing and,
+         I know how it’s gonna sound like but I wanted to thank you for being an amazing girlfriend I’ve never valued myself in a relationship, you’ve made me realize that i have a worth and you made it easier for me to go on and still try.
+          Maybe it’s too late to see that maybe it’s dumb to write things that you won’t read the point is that im getting eaten by remorse i don’t want to get back just want to let go of a heavy feeling. Im facing a barrier now maybe my bad deeds are turning up against me maybe seeing you at school made me sad I don’t want to know to be honnest.
+           You seem happier now, im glad to see that. Maybe one day you’ll see this maybe never I can’t just barge in again and again I have to respect your peace, that’s my biggest default with you I was maybe too egoistic I was not the guy I wanted you to see.
+            I think it’s better this way, a long note left to be forgotten on my note app. Or maybe you’ll read it I really don’t know, I can’t sleep yet im tired all day, sorry Nilay for everything and if you are reading this and you are still in your BTS if it’s awkward for you I still can change school.
+             Have a nice life, may الله Grant you succes and In shaa’الله you’ll get your BTS, I believe in you from afar. Farwell.</div>
+    </div>
+  </main>
+
+  <audio id="bg-music" preload="auto" loop>
+    <source src="./assets/music/home.mp3" type="audio/mpeg" />
+  </audio>
+
+  <button id="sound-toggle" class="sound-toggle" type="button" data-state="unmuted" aria-label="Couper le son">🔊</button>
+  <div id="resume-audio" class="resume-audio" role="status">Cliquer pour réactiver le son</div>
+
+  <script src="./js/navigation.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      if (!ARG.progress.require(ARG.progress.STEPS.POEM_UNLOCKED, "poem.html")) {
+        return;
+      }
+      ARG.audio.init("bg-music");
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <title>·</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+
+  <div class="glow" aria-hidden="true"></div>
+
+  <main class="stage">
+    <div class="content">
+      <p class="intro-text reveal delay-1">
+        To the moon : 
+        One last letter. My true goodbye..
+      </p>
+
+      <button id="enter-button" class="enter-button reveal delay-2" type="button">
+        ENTRER
+      </button>
+    </div>
+  </main>
+
+  <!-- Lecteur audio local. Remplacez assets/music/musique.mp3 par votre
+       propre fichier. Tant qu'aucun fichier n'est présent, le bouton
+       ENTRER fonctionne normalement (l'erreur audio est simplement
+       ignorée, voir js/navigation.js). -->
+  <audio id="bg-music" preload="auto" loop>
+    <source src="./assets/music/home.mp3" type="audio/mpeg" />
+  </audio>
+
+  <button id="sound-toggle" class="sound-toggle" type="button" data-state="unmuted" aria-label="Couper le son">🔊</button>
+  <div id="resume-audio" class="resume-audio" role="status">Cliquer pour réactiver le son</div>
+
+  <script src="./js/navigation.js"></script>
+  <script src="./js/main.js"></script>
+</body>
+</html>
